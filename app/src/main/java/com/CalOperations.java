@@ -11,6 +11,9 @@ import java.util.TreeMap;
 
 public class CalOperations {
     private String displayToString;
+    private String finalOperator;
+    private Double finalAnswer;
+    private Double finalOperand;
 
     public void setDisplay(String buttonClicked, EditText currentDisplay) {
         displayToString = currentDisplay.getText().toString();
@@ -23,8 +26,11 @@ public class CalOperations {
     }
 
     public Double calculate(EditText expressionToCalculate) {
-        displayToString = expressionToCalculate.getText().toString();
-
+        if (displayToString.contains("+") || displayToString.contains("-") || displayToString.contains("*") || displayToString.contains("/")) {
+            displayToString = expressionToCalculate.getText().toString();
+        } else {
+            displayToString = evalDoubleEqual();
+        }
         String[] inputArr = displayToString.split(" ");
 
         Stack<String> operator = new Stack<>();
@@ -62,8 +68,16 @@ public class CalOperations {
             double val2 = operand.pop();
             double val1 = operand.pop();
             operand.push(eval(op, val1, val2));
+            finalOperator = op;
+            finalOperand = val2;
         }
-        return operand.pop();
+        finalAnswer = operand.pop();
+        return finalAnswer;
+    }
+
+    public String evalDoubleEqual() {
+        String x = finalAnswer.toString() + " " + finalOperator + " " + finalOperand.toString();
+        return x;
     }
 
     public double eval(String op, double val1, double val2) {
